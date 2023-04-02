@@ -6,7 +6,6 @@ const { PrismaClient } = require('@prisma/client');
 
 
 
-const imagePath = './images/';
 
 
 
@@ -28,7 +27,6 @@ const prisma = new PrismaClient();
 
 
 //    / GET  ///////////////////////////////////////////////////
-
 app.get('/', (req, res) => {
   res.send({'data':'Hey this is my API running 🥳'})
 });
@@ -36,6 +34,44 @@ app.get('/', (req, res) => {
 
 
 
+
+///////////////////////////////////////////////////////////////
+const imagePath = './images/';
+
+
+//////////////
+const getSrc = (name) => {
+  const files = fs.readdirSync(imagePath)  
+  const srcs = []
+  for (const image of files) {
+    imgname = image.split('.jpg')[0].slice(0,-1)
+    if (imgname === name ) {
+      srcs.push(image)
+    }
+  }
+  return srcs 
+}
+//////////////
+
+//////////////
+const araJSON = (bigint) => {
+  console.log('))))))',bigint)
+  return(
+    {
+      'id':Number(bigint.id.toString()),
+      'productname':bigint.productname,
+      'price':bigint.price,
+      'color':bigint.color,
+      'category':bigint.category,
+      'size':bigint.size,
+    }
+  )
+}
+
+//////////////
+
+
+///////////////////////////////////////////////////////////////
 
 
 
@@ -50,21 +86,12 @@ app.post('/api/bapz/id', async (req, res) => {
   });
 
   // deal with element
-  fs.readdir(imagePath, (err, elements) => {
-    if (err) {
-      console.log(err);
-    } else {
-
-      
-      console.log(elements);
-    }
-  });
-
   if (product.length === 1) {
     const name = product[0].productname.split(' ').join('')
-    res.send({'data': name})
+    const srcs = await getSrc(name)
+    res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
   }
-  
+  // product with id = ID don't exist in database
   else 
     res.send({'data': 'not found'})
 });
