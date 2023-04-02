@@ -6,7 +6,7 @@ import requests
 
 
 
-res = requests.post('http://localhost:3000/api/bapz/id',data={'id':736})
+res = requests.post('http://localhost:4000/api/bapz/id',data={'id':736})
 
 
 
