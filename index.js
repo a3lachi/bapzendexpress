@@ -78,7 +78,9 @@ const araJSON = (bigint) => {
 ///////////////////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
 
-  res.send({'data':req.body.id})
+  const srcs = getSrc('SkullSTA1')
+
+  res.send({'data':srcs})
 
   // get elements from database
   // const product = await prisma.bapz.findMany({
