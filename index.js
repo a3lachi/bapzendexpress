@@ -215,7 +215,7 @@ const specs = swaggerJsdoc(options);
 // app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 const swaggerDocument = require('./swagger.json');
-const fileContent = fs.readFileSync('./theme-material.css', 'utf-8');
+const fileContent = fs.readFileSync('theme-material.css', 'utf-8');
 console.log(fileContent)
 var optionss = {
   customCss: fileContent
