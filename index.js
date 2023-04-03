@@ -4,16 +4,13 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const { readdir } = require('fs').promises;
-
-
-
-
-
+const path = require ('path')
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 app.use(express.static('public'));
+
 
 
 
@@ -27,9 +24,10 @@ const prisma = new PrismaClient();
 
 //    / GET  ///////////////////////////////////////////////////
 app.get('/', (req, res) => {
-  
+  const file = path.join(process.cwd(), './', 'mf.txt');
+  const stringified = fs.readFileSync(file, 'utf8');
 
-  res.send({'data':'Hey this is my API running 🥳'})
+  res.send({'data':stringified})
 });
 ///////////////////////////////////////////////////////////////
 
@@ -39,38 +37,6 @@ app.get('/', (req, res) => {
 ///////////////////////////////////////////////////////////////
 const imagePath = './images/';
 
-  async function getImages(name) {
-    const files = await readdir('./public/images');
-    const srcs = [];
-    for (const file of files) {
-      if (file.endsWith('.jpg')) {
-        const imgname = file.split('.jpg')[0].slice(0,-1);
-        if (imgname === name) {
-          srcs.push(file);
-        }
-      }
-    }
-    return srcs;
-  }
-
-
-//////////////
-const getSrc = (name) => {
-  try {
-    const files = fs.readdirSync(imagePath)  
-    const srcs = []
-    for (const image of files) {
-      imgname = image.split('.jpg')[0].slice(0,-1)
-      if (imgname === name ) {
-        srcs.push(image)
-      }
-    }
-    return srcs 
-  } catch(error) {
-    return [error]
-  }
-}
-//////////////
 
 //////////////
 const araJSON = (bigint) => {
@@ -95,36 +61,36 @@ const araJSON = (bigint) => {
 
 
 ///////////////////////////////////////////////////////////////
-app.post('/api/bapz/id', async (req, res) => {
+// app.post('/api/bapz/id', async (req, res) => {
 
-  fs.readFile('mf.txt', 'utf8', function(err, data) {
-    if (err) {
-      res.status(500).send(err);
-      return;
-    }
+//   fs.readFile('mf.txt', 'utf8', function(err, data) {
+//     if (err) {
+//       res.status(500).send(err);
+//       return;
+//     }
 
-    // Send the file contents as the response
-    res.send({'data':data});
-  });
+//     // Send the file contents as the response
+//     res.send({'data':data});
+//   });
 
 
-  // get elements from database
-  // const product = await prisma.bapz.findMany({
-  //   where: {
-  //     id: BigInt(req.body.id),
-  //   }
-  // });
+//   // get elements from database
+//   // const product = await prisma.bapz.findMany({
+//   //   where: {
+//   //     id: BigInt(req.body.id),
+//   //   }
+//   // });
 
-  // // deal with element
-  // if (product.length === 1) {
-  //   const name = product[0].productname.split(' ').join('')
-  //   const srcs = await getSrc(name)
-  //   res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
-  // }
-  // // product with id = ID don't exist in database
-  // else 
-  //   res.send({'data': 'not found'})
-});
+//   // // deal with element
+//   // if (product.length === 1) {
+//   //   const name = product[0].productname.split(' ').join('')
+//   //   const srcs = await getSrc(name)
+//   //   res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
+//   // }
+//   // // product with id = ID don't exist in database
+//   // else 
+//   //   res.send({'data': 'not found'})
+// });
 ///////////////////////////////////////////////////////////////
 
 
