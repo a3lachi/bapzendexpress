@@ -2,14 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { PrismaClient } = require('@prisma/client');
+// const { PrismaClient } = require('@prisma/client');
 const { readdir } = require('fs').promises;
 const path = require ('path')
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
-app.use(express.static('public'));
+// app.use(express.static('public'));
 
 
 
