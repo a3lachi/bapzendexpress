@@ -35,10 +35,12 @@ const imagePath = './images/';
 //////////////
 const getSrc = (name) => {
   try {
-    const files = fs.readdirSync(imagePath)  
+    const file = path.join(process.cwd(), './', './data.txt');
+    const imageNames = fs.readFileSync(file, 'utf8').split('\n').map(elem=>elem.split('__')[0])
+    
     const srcs = []
-    for (const image of files) {
-      imgname = image.split('.jpg')[0].slice(0,-1)
+    for (const image of imageNames) {
+      var imgname = image.slice(0,-1)
       if (imgname === name ) {
         srcs.push(image)
       }
@@ -117,21 +119,22 @@ app.post('/ids', async (req, res) => {
 app.post('/api/bapz/id', async (req, res) => {
 
   // get elements from database
-  const product = await prisma.bapz.findMany({
-    where: {
-      id: BigInt(req.body.id),
+  if(req?.body?.id) {
+    const product = await prisma.bapz.findMany({
+      where: {
+        id: BigInt(req.body.id),
+      }
+    });
+    // deal with element
+    if (product.length === 1) {
+      const name = product[0].productname.split(' ').join('')
+      const srcs = await getSrc(name)
+      res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
     }
-  });
 
-  // deal with element
-  if (product.length === 1) {
-    const name = product[0].productname.split(' ').join('')
-    const srcs = await getSrc(name)
-    res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
   }
-  // product with id = ID don't exist in database
-  else 
-    res.send({'data': req.body.id})
+
+  res.send({'data': 'no'})
 });
 /////////////////////////////////////////////////////////////////
 ////--------------------------------------------------------------------------------------------------------------------------------
