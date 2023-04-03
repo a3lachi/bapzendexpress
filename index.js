@@ -117,6 +117,36 @@ app.post('/ids', async (req, res) => {
 
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
+  console.log(req.body)
+  // get elements from database
+  try {
+    if(req?.body?.id) {
+      const product = await prisma.bapz.findMany({
+        where: {
+          id: BigInt(req.body.id),
+        }
+      });
+      // deal with element
+      if (product.length === 1) {
+        const name = product[0].productname.split(' ').join('')
+        const srcs = await getSrc(name)
+        res.status(200).json({found:"yes" });
+        return 
+      }
+
+    }
+  } catch {
+    console.log('try cathced an error.')
+  }
+
+  res.status(400).json({ data: 0 });
+  return
+});
+/////////////////////////////////////////////////////////////////
+
+
+////   POST     /////////////////////////////////////////////////
+app.post('/api/bapz/product', async (req, res) => {
 
   // get elements from database
   try {
@@ -138,7 +168,8 @@ app.post('/api/bapz/id', async (req, res) => {
     console.log('try cathced an error.')
   }
 
-  res.send({'data': '0'})
+  res.status(400).json({ data: 0 });
+  return
 });
 /////////////////////////////////////////////////////////////////
 
@@ -224,7 +255,7 @@ app.post('/api/bapz/apparel', async (req, res) => {
   catch {
     console.log('Error catched by try.')
   }
-  res.status(400).json({ data: "no" });
+  res.status(400).json({ data: 0 });
   return
 
 })
