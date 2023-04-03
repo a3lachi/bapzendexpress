@@ -219,7 +219,7 @@ const file = path.join(process.cwd(), './', 'theme-material.css');
 const fileContent = fs.readFileSync(file, 'utf8').split('\n').join(' ');
 const customCss = `
   .operation-tag-content button  {
-    background-color: red;
+    background-color: white;
     display:flex;
     font-family: Arial, sans-serif;
   }
