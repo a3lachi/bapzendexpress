@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -141,3 +142,4 @@ model django_session {
 
   @@index([expire_date], map: "idx_16614_django_session_expire_date_a5c62663")
 }
+
