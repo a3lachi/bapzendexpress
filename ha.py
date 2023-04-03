@@ -2,11 +2,11 @@ import requests
 
 
 
+url = [ 'https://bapzendexpress.vercel.app/api/bapz/id' , "http://localhost:4000/api/bapz/id" ]
 
 
 
-
-res = requests.post('http://localhost:4000/api/bapz/id',data={'id':736})
+res = requests.post(url[0],data={'id':736})
 
 
 

@@ -41,15 +41,19 @@ const imagePath = './images/';
 
 //////////////
 const getSrc = (name) => {
-  const files = fs.readdirSync(imagePath)  
-  const srcs = []
-  for (const image of files) {
-    imgname = image.split('.jpg')[0].slice(0,-1)
-    if (imgname === name ) {
-      srcs.push(image)
+  try {
+    const files = fs.readdirSync(imagePath)  
+    const srcs = []
+    for (const image of files) {
+      imgname = image.split('.jpg')[0].slice(0,-1)
+      if (imgname === name ) {
+        srcs.push(image)
+      }
     }
+    return srcs 
+  } catch(error) {
+    return [error]
   }
-  return srcs 
 }
 //////////////
 
