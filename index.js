@@ -18,7 +18,7 @@ const PORT = 3000;
 
 
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 
 
