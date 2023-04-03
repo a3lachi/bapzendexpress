@@ -11,79 +11,76 @@
       }
     ],
     "paths": {
-      "/api/bapz/id": {
-        "post": {
-          "summary": "Retrieve a product by ID",
-          "description": "Retrieves a product from the database by its ID",
+      "/images": {
+        "get": {
+          "summary": "Retrieve list of all image data.",
+          "description": "Retrieve names mapping to src files.",
           "tags": [
-            "Product"
-          ],
-          "operationId": "getProductById",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "body",
-              "description": "The ID of the product to retrieve",
-              "required": true,
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "example": 123
-                  }
-                }
-              }
-            }
+            "Bapz"
           ],
           "responses": {
             "200": {
-              "description": "Product found",
+              "description": "Images",
               "content": {
                 "application/json": {
                   "schema": {
                     "type": "object",
                     "properties": {
-                      "found": {
-                        "type": "string",
-                        "example": "yes"
-                      },
-                      "src": {
-                        "type": "string",
-                        "example": "https://example.com/image.jpg"
-                      },
                       "data": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "integer",
-                            "example": 123
-                          },
-                          "name": {
-                            "type": "string",
-                            "example": "Product name"
-                          },
-                          "description": {
-                            "type": "string",
-                            "example": "Product description"
-                          }
-                        }
+                        "type": "string",
+                        "example": "..alot"
                       }
                     }
                   }
                 }
               }
-            },
-            "404": {
-              "description": "Product not found",
+            }
+          }
+        }
+      },
+      "/": {
+        "get": {
+          "summary": "Test if API is up",
+          "tags": [
+            "Bapz"
+          ],
+          "responses": {
+            "200": {
+              "description": "API UP",
               "content": {
                 "application/json": {
                   "schema": {
                     "type": "object",
                     "properties": {
-                      "data": {
+                      "info": {
                         "type": "string",
-                        "example": "not found"
+                        "example": "API UP"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/bapz/id": {
+        "post": {
+          "summary": "Retrieve product",
+          "tags": [
+            "Bapz"
+          ],
+          "responses": {
+            "200": {
+              "description": "API UP",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "info": {
+                        "type": "string",
+                        "example": "API UP"
                       }
                     }
                   }
