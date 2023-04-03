@@ -119,6 +119,7 @@ app.post('/ids', async (req, res) => {
 app.post('/api/bapz/id', async (req, res) => {
 
   // get elements from database
+  try {
   if(req?.body?.id) {
     const product = await prisma.bapz.findMany({
       where: {
@@ -132,6 +133,9 @@ app.post('/api/bapz/id', async (req, res) => {
       res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
     }
 
+  }
+  } catch {
+    console.log('try cathced an error.')
   }
 
   res.send({'data': 'no'})
@@ -156,6 +160,7 @@ const addedCss = `
     align-items:center;
     width:100%;
   }
+
 `;
 const finalcss = addedCss + customCss
 var swaggerOptions = {
