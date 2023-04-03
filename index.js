@@ -151,7 +151,6 @@ const addedCss = `
     all:inherit;
     justify-content:center;
     align-items:center;
-    text-align:center;
     width:100%;
   }
 `;
