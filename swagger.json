@@ -1,91 +1,95 @@
 {
-    "openapi": "3.0.3",
+    "swagger": "2.0",
     "info": {
-      "title": "Your API Name",
-      "description": "Description of your API",
-      "version": "1.0.0"
+      "title": "API Example",
+      "version": "1.0.0",
+      "description": "An example of a Swagger JSON configuration for an API endpoint"
     },
-    "servers": [
-      {
-        "url": "/"
-      }
+    "basePath": "/",
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
     ],
     "paths": {
-      "/images": {
-        "get": {
-          "summary": "Retrieve list of all image data.",
-          "description": "Retrieve names mapping to src files.",
+      "/api/bapz/id": {
+        "post": {
           "tags": [
-            "Bapz"
+            "images"
           ],
-          "responses": {
-            "200": {
-              "description": "Images",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "data": {
-                        "type": "string",
-                        "example": "..alot"
-                      }
-                    }
+          "summary": "Retrieve a product by ID",
+          "description": "retrieve product full details by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "body",
+              "description": "The ID of the image",
+              "required": true,
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "format": "base64"
                   }
                 }
               }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Image uploaded successfully"
+            },
+            "400": {
+              "description": "Invalid request data"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
+      "/images": {
+        "get": {
+          "tags": [
+            "images"
+          ],
+          "summary": "Retrieve all images",
+          "description": "Get mapping of all images names and corresponding src files.",
+          "responses": {
+            "200": {
+              "description": "Data ready."
+            },
+            "400": {
+              "description": "Invalid request data"
+            },
+            "500": {
+              "description": "Server error"
             }
           }
         }
       },
       "/": {
         "get": {
-          "summary": "Test if API is up",
           "tags": [
-            "Bapz"
+            "images"
           ],
+          "summary": "Test API is up",
           "responses": {
             "200": {
-              "description": "API UP",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "info": {
-                        "type": "string",
-                        "example": "API UP"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
-      "/api/bapz/id": {
-        "post": {
-          "summary": "Retrieve product",
-          "tags": [
-            "Bapz"
-          ],
-          "responses": {
-            "200": {
-              "description": "API UP",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "info": {
-                        "type": "string",
-                        "example": "API UP"
-                      }
-                    }
-                  }
-                }
-              }
+              "description": "API is up"
+            },
+            "400": {
+              "description": "Invalid request data"
+            },
+            "500": {
+              "description": "Server error"
             }
           }
         }

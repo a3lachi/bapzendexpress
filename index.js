@@ -115,7 +115,7 @@ app.post('/api/bapz/id', async (req, res) => {
   // }
   // // product with id = ID don't exist in database
   // else 
-  res.send({'data': req.body})
+  res.send({'data': req.body.id})
 });
 /////////////////////////////////////////////////////////////////
 ////--------------------------------------------------------------------------------------------------------------------------------
@@ -146,6 +146,7 @@ const addedCss = `
     all:inherit;
     justify-content:center;
     align-items:center;
+    text-align:center;
   }
 `;
 const finalcss = addedCss + customCss
