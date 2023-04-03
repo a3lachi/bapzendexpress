@@ -3,7 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
-
+const { readdir } = require('fs').promises;
 
 
 
@@ -37,6 +37,20 @@ app.get('/', (req, res) => {
 
 ///////////////////////////////////////////////////////////////
 const imagePath = './images/';
+
+  async function getImages(name) {
+    const files = await readdir('./images');
+    const srcs = [];
+    for (const file of files) {
+      if (file.endsWith('.jpg')) {
+        const imgname = file.split('.jpg')[0].slice(0,-1);
+        if (imgname === name) {
+          srcs.push(file);
+        }
+      }
+    }
+    return srcs;
+  }
 
 
 //////////////
@@ -82,7 +96,7 @@ const araJSON = (bigint) => {
 ///////////////////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
 
-  const srcs = getSrc('SkullSTA1')
+  const srcs = await getImages('SkullSTA1')
 
   res.send({'data':srcs})
 
