@@ -1,20 +1,10 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
   url      = "postgres://a3laxi:dYE6JkwLBPn0@ep-icy-mountain-203510.eu-central-1.aws.neon.tech/neondb"
-}
-
-model bapz {
-  id          BigInt  @id(map: "idx_16558_bapz_bapz_pkey") @default(autoincrement())
-  productname String?
-  price       String?
-  color       String?
-  size        String?
-  category    String?
 }
 
 model auth_group {
@@ -90,7 +80,16 @@ model auth_user_user_permissions {
   @@index([user_id], map: "idx_16575_auth_user_user_permissions_user_id_a95ead1b")
 }
 
-model bapz_customer {
+model bapz {
+  id          BigInt  @id(map: "idx_16558_bapz_bapz_pkey") @default(autoincrement())
+  productname String?
+  price       String?
+  color       String?
+  size        String?
+  category    String?
+}
+
+model customer {
   id       BigInt  @id(map: "idx_16620_bapz_customer_pkey") @default(autoincrement())
   pwd      String?
   email    String? @unique(map: "idx_16620_sqlite_autoindex_bapz_customer_1")
@@ -142,4 +141,3 @@ model django_session {
 
   @@index([expire_date], map: "idx_16614_django_session_expire_date_a5c62663")
 }
-

@@ -219,7 +219,7 @@ app.post('/api/bapz/product', async (req, res) => {
 
 
 
-/////////////////////////////////////////////////////////////////
+///////   POST     //////////////////////////////////////////////////////////
 app.post('/api/bapz/apparel', async (req, res) => {
   console.log(req.body.cat)
   // get elements from database
@@ -305,8 +305,99 @@ app.post('/api/bapz/apparel', async (req, res) => {
 })
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-////--------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+//////    POST    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.post('/api/customer', async (req, res) => {
+  
+  // get elements from database
+  console.log(req.body.email)
+  
+  try {
+    if(req?.body?.email && req?.body?.pwd) {
+      if (!req.body.frstname) {
+        //////////////// login //////////////
+        const customer = await prisma.customer.findMany({
+          where: {
+            email: req.body.email.toString(),
+            pwd : req.body.pwd.toString()
+          }
+        });
+        console.log(customer.length)
+        // deal with element
+        if (customer.length === 1) {
+          res.status(200).json({info:"user" , "jwt":customer[0].jwt});
+          return 
+        }
+        else {
+          ////////////// WRONG PWD OR EMAIL //////////////
+          res.status(200).json({info:"wrong"});
+          return 
+        }
+      }
+      else {
+        //////////////// REGISTER //////////////
+         // check if email is already registred
+         const customerCheck = await prisma.customer.findMany({
+          where: {
+            email: req.body.email.toString()
+          }
+        });
+        if (customerCheck.length === 1) {
+          res.status(200).json({info:"exist"});
+          return
+        }
+
+        // NEW USER
+        const jwt = 'DSFDGSDFHR78568756756' 
+        const user = await prisma.customer.create({
+          data: {
+            email:req.body.email.toString(),
+            pwd:req.body.pwd.toString(),
+            frstname: req.body.frstname.toString(),
+            lstname: req.body.lstname.toString(),
+            usrname:req.body.usrname.toString(),
+            jwt:jwt
+          },
+        })
+        res.status(200).json({info:"new" , "jwt":jwt});
+        return 
+      }
+    }
+  } catch (err)  {
+      console.log('try cathced an error.',err)
+  }
+
+  res.status(400).json({ data: 0 });
+  return
+});
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+////--------------------------------------------------------------------------------------------------------------------------------
 ////     SWAGGER       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const swaggerDocument = require('./swagger.json');
 const file = path.join(process.cwd(), './', 'theme-material.css');

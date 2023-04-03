@@ -51,6 +51,49 @@
           }
         }
       },
+      "/api/customer": {
+        "post": {
+          "tags": [
+            "Customer"
+          ],
+          "summary": "Login/Register a user",
+          "description": "Check if the user exist in database",
+          "parameters": [
+            {
+              "name": "email",
+              "in": "body",
+              "description": "User Email",
+              "required": ["email","pwd"],
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "default":"osirusjack@667.io"
+                  },
+                  "pwd": {
+                    "type": "string",
+                    "default":"Azerty67890"
+                  },
+                  "frstname": {
+                    "type": "string",
+                    "default":"Frstname"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Image uploaded successfully"
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      },
       "/images": {
         "get": {
           "tags": [
