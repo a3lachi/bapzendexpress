@@ -6,11 +6,15 @@ const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const { readdir } = require('fs').promises;
 const path = require ('path')
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-const swaggerJSDoc = require('swagger-jsdoc');
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml');
+
+
+// const swaggerJsdoc = require('swagger-jsdoc');
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerJSDoc = require('swagger-jsdoc');
+
+
+// const YAML = require('yamljs');
+// const swaggerDocument = YAML.load('./swagger.yaml');
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -21,7 +25,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 app.use(express.static('public'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = 3000;
 
@@ -88,6 +94,7 @@ app.get('/', (req, res) => {
 
 //    / GET  ///////////////////////////////////////////////////
 app.get('/images', (req, res) => {
+
   const file = path.join(process.cwd(), './', 'data.txt');
   const stringified = fs.readFileSync(file, 'utf8');
 
@@ -123,6 +130,28 @@ app.post('/api/bapz/id', async (req, res) => {
 
 
 //--------------------------------------------------------------------------------------------------------------------------------
+
+
+const yaml = require('js-yaml');
+
+const swaggerPath = path.join(__dirname, 'swagger.yaml');
+const swaggerFileContents = fs.readFileSync(swaggerPath, 'utf8');
+const swaggerDocument = yaml.load(swaggerFileContents);
+
+
+const swaggerUi = require('swagger-ui-express');
+const swaggerJsdoc = require('swagger-jsdoc');
+
+const options = {
+    swaggerDefinition: swaggerDocument,
+    apis: []
+};
+
+const specs = swaggerJsdoc(options);
+
+app.use('/api-docs', swaggerUi.serve);
+app.get('/api-docs', swaggerUi.setup(specs));
+
 
 
 
