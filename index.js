@@ -167,6 +167,16 @@ const app = express();
 const YAML = require('yamljs');
 const swaggerUiHtml = require('swagger-ui-dist');
 
+
+const cssFiles = [
+  'theme-feeling-blue.css', 'theme-material.css',    'theme-muted.css',        'theme-outline.css',
+  'theme-flattop.css'      ,'theme-monokai.css'      ,'theme-newspaper.css'
+];
+
+
+const custmCs = cssFiles.map((file) => {
+  return path.join(__dirname, file);
+});
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -195,12 +205,23 @@ const options = {
   }
     ,  
   apis: [path.join(__dirname, './*.js')], // path to the API routes folder
+  swaggerOptions: {
+    customCss: custmCs,
+  },
 };
 
 const specs = swaggerJsdoc(options);
-console.log(swaggerUi.serve)
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+const swaggerDocument = require('./swagger.json');
+const fileContent = fs.readFileSync('./theme-material.css', 'utf-8');
+console.log(fileContent)
+var optionss = {
+  customCss: fileContent
+};
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, optionss));
 // Define your routes
 app.get('/', (req, res) => {
   res.send('Hello World!');
