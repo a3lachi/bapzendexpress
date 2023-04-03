@@ -11,5 +11,12 @@
       "src": "/(.*)",
       "dest": "index.js"
     }
-  ]
+  ],
+  "static": {
+    "glob": "public/**/*",
+    "rewrites": {
+      "source": "/(.*)",
+      "destination": "/$1"
+    }
+  }
 }

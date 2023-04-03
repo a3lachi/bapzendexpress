@@ -12,6 +12,7 @@ app.use(cors()); // Allow all origins to access the API
 // app.use(express.static('public'));
 
 
+app.use(express.static('public'));
 
 
 const PORT = 3000;
