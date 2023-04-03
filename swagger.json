@@ -68,6 +68,41 @@
           }
         }
       },
+      "/api/bapz/product": {
+        "get": {
+          "tags": [
+            "Bapz"
+          ],
+          "summary": "Retrieve a product by id",
+          "description": "Get all the necessary informations about a product form his unique ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "body",
+              "description": "The ID of the product",
+              "required": true,
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "default":740
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Data ready."
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      },
       "/api/bapz/apparel": {
         "post": {
           "tags": [
