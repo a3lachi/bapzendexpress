@@ -217,8 +217,16 @@ const specs = swaggerJsdoc(options);
 const swaggerDocument = require('./swagger.json');
 const file = path.join(process.cwd(), './', 'theme-material.css');
 const fileContent = fs.readFileSync(file, 'utf8').split('\n').join(' ');
+const customCss = `
+  .operation-tag-content button  {
+    background-color: red;
+    display:flex;
+    font-family: Arial, sans-serif;
+  }
+`;
+const finalcss = fileContent + customCss
 var optionss = {
-  customCss: fileContent
+  customCss: finalcss
 };
 
 
