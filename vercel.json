@@ -3,26 +3,17 @@
   "builds": [
     {
       "src": "index.js",
-      "use": "@now/node"
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "index.js"
-    }
-  ],
-  "rewrites": [
+      "src": "/images/(.*)",
+      "dest": "/public/images/$1"
+    },
     {
-      "source": "/images/(.*)",
-      "destination": "/public/images/$1"
+      "src": "/(.*)",
+      "dest": "/index.js"
     }
-  ],
-  "static": {
-    "glob": "public/**/*",
-    "rewrites": {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  }
+  ]
 }

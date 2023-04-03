@@ -2,11 +2,11 @@ import requests
 
 
 
-url = [ 'https://bapzendexpress.vercel.app/api/bapz/id' , "http://localhost:4000/" ]
+url = [ 'https://bapzendexpress.vercel.app/api/bapz/id' , "http://localhost:3000/api/bapz/id" ]
 
 
 
-res = requests.get(url[1])
+res = requests.post(url[0],{'id':736})
 
 
 
