@@ -155,7 +155,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Define a route to list the image files in the 'public/images' directory
 app.get('/images', (req, res) => {
   try {
-    const files = fs.readdirSync('./public/images');
+    const files = fs.readdirSync('./public/lol');
     const imageFiles = files.filter(file => file.endsWith('.jpg'));
     res.send(imageFiles);
   } catch (err) {
