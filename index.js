@@ -175,7 +175,7 @@ app.post('/api/bapz/id', async (req, res) => {
       // deal with element
       if (product.length === 1) {
         const rez = getSrc(product[0].productname.split(' ').join(''))
-        res.status(200).json({found:"yes" ,src:rez});
+        res.status(200).json({found:"yes" ,src:rez,data:araJSON(product[0])});
         return 
       }
     }
