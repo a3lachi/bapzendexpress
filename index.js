@@ -13,6 +13,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
+app.use(express.static('public'));
 
 
 
@@ -39,7 +40,7 @@ app.get('/', (req, res) => {
 const imagePath = './images/';
 
   async function getImages(name) {
-    const files = await readdir('./images');
+    const files = await readdir('./public/images');
     const srcs = [];
     for (const file of files) {
       if (file.endsWith('.jpg')) {
