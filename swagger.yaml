@@ -1,37 +1,14 @@
 openapi: 3.0.0
 info:
-  title: Sample API
+  title: My API
   version: 1.0.0
+  description: This is a sample API
 servers:
   - url: http://localhost:3000
 paths:
-  /api/bapz/id:
-    post:
-      summary: Get product details by ID
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                id:
-                  type: integer
+  /hello:
+    get:
+      summary: Say hello
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  found:
-                    type: string
-                  src:
-                    type: array
-                    items:
-                      type: string
-                  data:
-                    type: object
-      tags:
-        - Product
+        '200':
+          description: A successful response
