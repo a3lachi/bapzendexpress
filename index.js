@@ -223,6 +223,8 @@ const customCss = `
     display:flex;
     font-family: Arial, sans-serif;
     width:100%;
+    justify-content:center;
+    align-items:center;
   }
 `;
 const finalcss = fileContent + customCss
