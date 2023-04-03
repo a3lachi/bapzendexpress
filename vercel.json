@@ -12,6 +12,12 @@
       "dest": "index.js"
     }
   ],
+  "rewrites": [
+    {
+      "source": "/images/(.*)",
+      "destination": "/public/images/$1"
+    }
+  ],
   "static": {
     "glob": "public/**/*",
     "rewrites": {
