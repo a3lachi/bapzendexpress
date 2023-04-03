@@ -32,23 +32,69 @@ const prisma = new PrismaClient();
 // ///////////////////////////////////////////////////////////////
 const imagePath = './images/';
 
+
+const fileData = path.join(process.cwd(), './', 'data.txt');
+const getData = fs.readFileSync(fileData, 'utf8').split('\n');
+
+const dataTree = {
+  'A': [],
+  'B': [],
+  'C': [],
+  'D': [],
+  'E': [],
+  'F': [],
+  'G': [],
+  'H': [],
+  'I': [],
+  'J': [],
+  'K': [],
+  'L': [],
+  'M': [],
+  'N': [],
+  'O': [],
+  'P': [],
+  'Q': [],
+  'R': [],
+  'S': [],
+  'T': [],
+  'U': [],
+  'V': [],
+  'W': [],
+  'X': [],
+  'Y': [],
+  'Z': [],
+  '1': [],
+  '2': [],
+  '3': [],
+  '4': [],
+  '5': [],
+  '6': [],
+  '7': [],
+  '8': [],
+  '9': []
+};
+for (const dt of getData) {
+  const char = dt[0]
+  if (dataTree.hasOwnProperty(char)) {
+    dataTree[char].push(dt);
+  }
+}
+
+
+
+
+
+
 //////////////
 const getSrc = (name) => {
-  try {
-    const file = path.join(process.cwd(), './', './data.txt');
-    const imageNames = fs.readFileSync(file, 'utf8').split('\n').map(elem=>elem.split('__')[0])
-    
-    const srcs = []
-    for (const image of imageNames) {
-      var imgname = image.slice(0,-1)
-      if (imgname === name.split(' ').join('') ) {
-        srcs.push(image)
-      }
+  rez = []
+  for (const data of dataTree[name[0]]) {
+    const dataRay = data.split('__')
+    if (name === dataRay[0].slice(0,-1)) {
+      rez.push(dataRay[1])
     }
-    return srcs 
-  } catch(error) {
-    return [error]
   }
+  return rez
 }
 //////////////
 
@@ -117,7 +163,7 @@ app.post('/ids', async (req, res) => {
 
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
-  console.log(req.body)
+  console.log(req.body.id)
   // get elements from database
   try {
     if(req?.body?.id) {
@@ -128,12 +174,10 @@ app.post('/api/bapz/id', async (req, res) => {
       });
       // deal with element
       if (product.length === 1) {
-        const name = product[0].productname.split(' ').join('')
-        const srcs = await getSrc(name)
-        res.status(200).json({found:"yes" });
+        const rez = getSrc(product[0].productname.split(' ').join(''))
+        res.status(200).json({found:"yes" ,src:rez});
         return 
       }
-
     }
   } catch {
     console.log('try cathced an error.')
@@ -147,25 +191,25 @@ app.post('/api/bapz/id', async (req, res) => {
 
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/product', async (req, res) => {
-
+  
   // get elements from database
   try {
-  if(req?.body?.id) {
-    const product = await prisma.bapz.findMany({
-      where: {
-        id: BigInt(req.body.id),
+    if(req?.body?.id) {
+      const product = await prisma.bapz.findMany({
+        where: {
+          id: BigInt(Number(req.body.id)),
+        }
+      });
+      // deal with element
+      if (product.length === 1) {
+        const name = product[0].productname.split(' ').join('')
+        const srcs = await getSrc(name)
+        res.status(200).json({found:"yes" ,src:srcs , data:araJSON(product[0]) });
+        return 
       }
-    });
-    // deal with element
-    if (product.length === 1) {
-      const name = product[0].productname.split(' ').join('')
-      const srcs = await getSrc(name)
-      res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0]) })
     }
-
-  }
   } catch {
-    console.log('try cathced an error.')
+      console.log('try cathced an error.')
   }
 
   res.status(400).json({ data: 0 });
@@ -177,7 +221,7 @@ app.post('/api/bapz/product', async (req, res) => {
 
 /////////////////////////////////////////////////////////////////
 app.post('/api/bapz/apparel', async (req, res) => {
-
+  console.log(req.body.cat)
   // get elements from database
   try {
     if(req?.body?.cat) {
