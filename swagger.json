@@ -69,7 +69,7 @@
         }
       },
       "/api/bapz/product": {
-        "get": {
+        "post": {
           "tags": [
             "Bapz"
           ],
