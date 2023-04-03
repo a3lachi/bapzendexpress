@@ -100,22 +100,22 @@ app.get('/images', (req, res) => {
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
 
-  // // get elements from database
-  // const product = await prisma.bapz.findMany({
-  //   where: {
-  //     id: BigInt(req.body.id),
-  //   }
-  // });
+  // get elements from database
+  const product = await prisma.bapz.findMany({
+    where: {
+      id: BigInt(req.body.id),
+    }
+  });
 
-  // // deal with element
-  // if (product.length === 1) {
-  //   const name = product[0].productname.split(' ').join('')
-  //   const srcs = await getSrc(name)
-  //   res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
-  // }
-  // // product with id = ID don't exist in database
-  // else 
-  res.send({'data': req.body.id})
+  // deal with element
+  if (product.length === 1) {
+    const name = product[0].productname.split(' ').join('')
+    const srcs = await getSrc(name)
+    res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
+  }
+  // product with id = ID don't exist in database
+  else 
+    res.send({'data': req.body.id})
 });
 /////////////////////////////////////////////////////////////////
 ////--------------------------------------------------------------------------------------------------------------------------------
@@ -123,18 +123,7 @@ app.post('/api/bapz/id', async (req, res) => {
 
 
 
-// ///////////////////////////////////////////////////////////////
-// app.listen(PORT, () => {
-//   console.log(`API listening on PORT ${PORT} `)
-// });
-// ///////////////////////////////////////////////////////////////
-const YAML = require('yamljs');
-const swaggerUiHtml = require('swagger-ui-dist');
-
-
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
+////     SWAGGER       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const swaggerDocument = require('./swagger.json');
 const file = path.join(process.cwd(), './', 'theme-material.css');
 const customCss = fs.readFileSync(file, 'utf8').split('\n').join(' ');
@@ -154,10 +143,13 @@ var swaggerOptions = {
   customCss: finalcss
 };
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Start the server
+
+
+//        START SERVER       ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
