@@ -145,19 +145,19 @@
 
 const express = require('express');
 const path = require('path');
-const { readdir } = require('fs').promises;
+const fs = require('fs');
 
 const app = express();
 
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Define a route to list the files in the 'public/images' directory
-app.get('/images', async (req, res) => {
+// Define a route to list the image files in the 'public/images' directory
+app.get('/images', (req, res) => {
   try {
-    const files = await readdir('./public/images');
-    const fileNames = files.filter(file => file.endsWith('.jpg'));
-    res.send(fileNames);
+    const files = fs.readdirSync('./public/images');
+    const imageFiles = files.filter(file => file.endsWith('.jpg'));
+    res.send(imageFiles);
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
