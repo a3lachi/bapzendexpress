@@ -74,6 +74,44 @@
           }
         }
       },
+      "/api/bapz/apparel": {
+        "post": {
+          "tags": [
+            "Bapz"
+          ],
+          "summary": "Retrieve all images by category",
+          "description": "Get mapping of all images data by category.",
+          "parameters": [
+            {
+              "name": "cat",
+              "in": "body",
+              "description": "The category of products",
+              "required": true,
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cat": {
+                    "type": "string",
+                    "default":"hats"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Data ready."
+            },
+            "400": {
+              "description": "Invalid request data"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
       "/ids": {
         "post": {
           "tags": [

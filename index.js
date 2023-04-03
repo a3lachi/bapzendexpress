@@ -41,7 +41,7 @@ const getSrc = (name) => {
     const srcs = []
     for (const image of imageNames) {
       var imgname = image.slice(0,-1)
-      if (imgname === name ) {
+      if (imgname === name.split(' ').join('') ) {
         srcs.push(image)
       }
     }
@@ -138,13 +138,39 @@ app.post('/api/bapz/id', async (req, res) => {
     console.log('try cathced an error.')
   }
 
-  res.send({'data': 'no'})
+  res.send({'data': '0'})
 });
 /////////////////////////////////////////////////////////////////
 ////--------------------------------------------------------------------------------------------------------------------------------
+app.post('/api/bapz/apparel', async (req, res) => {
 
+  // get elements from database
+  try {
+    if(req?.body?.cat) {
+      const products = await prisma.bapz.findMany({
+        where: {
+          category: req?.body?.cat,
+        }
+      })
+      prodsRes = []
+      for (const produit of products) {
 
+        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString())])
+      }
 
+      res.status(200).json({ data: prodsRes });
+      return
+    }
+
+  }
+
+  catch {
+    console.log('Error catched by try.')
+  }
+  res.send({"data":"0"})
+  return
+
+})
 
 ////     SWAGGER       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const swaggerDocument = require('./swagger.json');
