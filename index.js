@@ -100,22 +100,22 @@ app.get('/images', (req, res) => {
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
 
-  // get elements from database
-  const product = await prisma.bapz.findMany({
-    where: {
-      id: BigInt(req.body.id),
-    }
-  });
+  // // get elements from database
+  // const product = await prisma.bapz.findMany({
+  //   where: {
+  //     id: BigInt(req.body.id),
+  //   }
+  // });
 
-  // deal with element
-  if (product.length === 1) {
-    const name = product[0].productname.split(' ').join('')
-    const srcs = await getSrc(name)
-    res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
-  }
-  // product with id = ID don't exist in database
-  else 
-    res.send({'data': 'not found'})
+  // // deal with element
+  // if (product.length === 1) {
+  //   const name = product[0].productname.split(' ').join('')
+  //   const srcs = await getSrc(name)
+  //   res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
+  // }
+  // // product with id = ID don't exist in database
+  // else 
+  res.send({'data': req.body})
 });
 /////////////////////////////////////////////////////////////////
 ////--------------------------------------------------------------------------------------------------------------------------------
