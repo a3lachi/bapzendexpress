@@ -19,7 +19,7 @@
       "/api/bapz/id": {
         "post": {
           "tags": [
-            "images"
+            "Bapz"
           ],
           "summary": "Retrieve a product by ID",
           "description": "retrieve product full details by ID",
@@ -57,7 +57,7 @@
       "/images": {
         "get": {
           "tags": [
-            "images"
+            "Bapz"
           ],
           "summary": "Retrieve all images",
           "description": "Get mapping of all images names and corresponding src files.",
@@ -74,10 +74,30 @@
           }
         }
       },
+      "/ids": {
+        "get": {
+          "tags": [
+            "Bapz"
+          ],
+          "summary": "Retrieve IDs",
+          "description": "Get all product's ids",
+          "responses": {
+            "200": {
+              "description": "IDs ready."
+            },
+            "400": {
+              "description": "Invalid request data"
+            },
+            "500": {
+              "description": "Server error"
+            }
+          }
+        }
+      },
       "/": {
         "get": {
           "tags": [
-            "images"
+            "Bapz"
           ],
           "summary": "Test API is up",
           "responses": {

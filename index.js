@@ -95,6 +95,19 @@ app.get('/images', (req, res) => {
 // ///////////////////////////////////////////////////////////////
 
 
+////    GET     ///////////////////////////////////////////////////
+app.get('/ids', async (req, res) => {
+  const products = await prisma.bapz.findMany({});
+  const idiz = []
+  for (const product of products)
+    idiz.push(Number(product.id.toString()))
+
+
+  res.send({'data':idiz})
+});
+// ///////////////////////////////////////////////////////////////
+
+
 
 
 ////   POST     /////////////////////////////////////////////////
@@ -136,7 +149,7 @@ const addedCss = `
     justify-content:center;
     align-items:center;
     text-align:center;
-    widht:100%;
+    width:100%;
   }
 `;
 const finalcss = addedCss + customCss
