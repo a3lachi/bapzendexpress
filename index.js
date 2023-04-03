@@ -1,36 +1,33 @@
 const express = require('express');
 const cors = require('cors');
+const swagger = require('./swagger');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 const { readdir } = require('fs').promises;
 const path = require ('path')
+const swaggerJsdoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
+const YAML = require('yamljs');
+const swaggerDocument = YAML.load('./swagger.yaml');
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 app.use(express.static('public'));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const PORT = 3000;
 
-
-
 const prisma = new PrismaClient();
 
-
-
-//    / GET  ///////////////////////////////////////////////////
-app.get('/', (req, res) => {
-  const file = path.join(process.cwd(), './', 'mf.txt');
-  const stringified = fs.readFileSync(file, 'utf8');
-
-  
-
-  res.send({'data':stringified})
-});
-///////////////////////////////////////////////////////////////
-
+//--------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -78,7 +75,31 @@ const araJSON = (bigint) => {
 
 
 
+
+
+//--------------------------------------------------------------------------------------------------------------------------------
+
+
+//    / GET  ///////////////////////////////////////////////////
+app.get('/', (req, res) => {
+  res.send({'info':"API CORRECTLY WORKING."})
+});
 ///////////////////////////////////////////////////////////////
+
+//    / GET  ///////////////////////////////////////////////////
+app.get('/images', (req, res) => {
+  const file = path.join(process.cwd(), './', 'data.txt');
+  const stringified = fs.readFileSync(file, 'utf8');
+
+
+  res.send({'data':stringified})
+});
+///////////////////////////////////////////////////////////////
+
+
+
+
+//////   POST  /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
 
   // get elements from database
@@ -101,6 +122,9 @@ app.post('/api/bapz/id', async (req, res) => {
 ///////////////////////////////////////////////////////////////
 
 
+//--------------------------------------------------------------------------------------------------------------------------------
+
+
 
 
 
@@ -109,5 +133,3 @@ app.listen(PORT, () => {
   console.log(`API listening on PORT ${PORT} `)
 });
 ///////////////////////////////////////////////////////////////
-
-
