@@ -75,12 +75,30 @@
         }
       },
       "/ids": {
-        "get": {
+        "post": {
           "tags": [
             "Bapz"
           ],
           "summary": "Retrieve IDs",
           "description": "Get all product's ids",
+          "parameters": [
+            {
+              "name": "limit",
+              "in": "body",
+              "description": "Maximum results returned",
+              "required": false,
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "limit": {
+                    "type": "integer",
+                    "format": "base64"
+                  }
+                }
+              }
+            }
+          ],
           "responses": {
             "200": {
               "description": "IDs ready."

@@ -96,16 +96,19 @@ app.get('/images', (req, res) => {
 
 
 ////    GET     ///////////////////////////////////////////////////
-app.get('/ids', async (req, res) => {
+app.post('/ids', async (req, res) => {
   const products = await prisma.bapz.findMany({});
-  const idiz = []
+  var idiz = []
   for (const product of products)
     idiz.push(Number(product.id.toString()))
 
-
-  res.send({'data':idiz})
+  if (req.body.limit) {
+    res.send({'data':idiz.slice(0,req.body.limit)})
+  }
+  else
+    res.send({'data':idiz})
 });
-// ///////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 
 
 
