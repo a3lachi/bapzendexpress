@@ -222,7 +222,7 @@ const customCss = `
     background-color: white;
     display:flex;
     font-family: Arial, sans-serif;
-    width:100%;
+    
     justify-content:center;
     align-items:center;
   }
