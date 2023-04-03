@@ -136,6 +136,7 @@ const addedCss = `
     justify-content:center;
     align-items:center;
     text-align:center;
+    widht:100%;
   }
 `;
 const finalcss = addedCss + customCss
