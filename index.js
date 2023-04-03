@@ -8,17 +8,18 @@ const { readdir } = require('fs').promises;
 const path = require ('path')
 
 
-PORT = 3000
+
 
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml');
+// // const YAML = require('yamljs');
+// // const swaggerDocument = YAML.load('./swagger.yaml');
 
 
-// --------------------------------------------------------------------------------------------------------------------------------
+// //--------------------------------------------------------------------------------------------------------------------------------
 
 
 const app = express();
@@ -88,56 +89,89 @@ const app = express();
 
 
 // //    / GET  ///////////////////////////////////////////////////
-app.get('/', (req, res) => {
-  res.send({'info':"API CORRECTLY WORKING."})
-});
-///////////////////////////////////////////////////////////////
+// app.get('/', (req, res) => {
+//   res.send({'info':"API CORRECTLY WORKING."})
+// });
+// ///////////////////////////////////////////////////////////////
 
-//    / GET  ///////////////////////////////////////////////////
-app.get('/images', (req, res) => {
+// //    / GET  ///////////////////////////////////////////////////
+// app.get('/images', (req, res) => {
 
-  const file = path.join(process.cwd(), './', 'data.txt');
-  const stringified = fs.readFileSync(file, 'utf8');
-
-
-  res.send({'data':stringified})
-});
-///////////////////////////////////////////////////////////////
+//   const file = path.join(process.cwd(), './', 'data.txt');
+//   const stringified = fs.readFileSync(file, 'utf8');
 
 
+//   res.send({'data':stringified})
+// });
+// ///////////////////////////////////////////////////////////////
 
 
-//////   POST  /////////////////////////////////////////////////
-app.post('/api/bapz/id', async (req, res) => {
 
-  // get elements from database
-  const product = await prisma.bapz.findMany({
-    where: {
-      id: BigInt(req.body.id),
-    }
-  });
 
-  // deal with element
-  if (product.length === 1) {
-    const name = product[0].productname.split(' ').join('')
-    const srcs = await getSrc(name)
-    res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
-  }
-  // product with id = ID don't exist in database
-  else 
-    res.send({'data': 'not found'})
-});
-///////////////////////////////////////////////////////////////
+// //////   POST  /////////////////////////////////////////////////
+// app.post('/api/bapz/id', async (req, res) => {
+
+//   // get elements from database
+//   const product = await prisma.bapz.findMany({
+//     where: {
+//       id: BigInt(req.body.id),
+//     }
+//   });
+
+//   // deal with element
+//   if (product.length === 1) {
+//     const name = product[0].productname.split(' ').join('')
+//     const srcs = await getSrc(name)
+//     res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
+//   }
+//   // product with id = ID don't exist in database
+//   else 
+//     res.send({'data': 'not found'})
+// });
+// ///////////////////////////////////////////////////////////////
 
 
 // //--------------------------------------------------------------------------------------------------------------------------------
 
 
+// const yaml = require('js-yaml');
+
+// const swaggerPath = path.join(__dirname, 'swagger.yaml');
+// const swaggerFileContents = fs.readFileSync(swaggerPath, 'utf8');
+// const swaggerDocument = yaml.load(swaggerFileContents);
+
+
+// const swaggerUi = require('swagger-ui-express');
+// const swaggerJsdoc = require('swagger-jsdoc');
+
+// const options = {
+//     swaggerDefinition: swaggerDocument,
+//     apis: []
+// };
+
+// const specs = swaggerJsdoc(options);
+
+// app.use('/api-docs', swaggerUi.serve);
+// app.get('/api-docs', swaggerUi.setup(specs));
 
 
 
 
-// ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// ///////////////////////////////////////////////////////////////
+// app.listen(PORT, () => {
+//   console.log(`API listening on PORT ${PORT} `)
+// });
+// ///////////////////////////////////////////////////////////////
+const YAML = require('yamljs');
+const swaggerUiHtml = require('swagger-ui-dist');
+
+
+
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
+const swaggerDocument = require('./swagger.json');
 const file = path.join(process.cwd(), './', 'theme-material.css');
 const customCss = fs.readFileSync(file, 'utf8').split('\n').join(' ');
 const addedCss = `
@@ -158,10 +192,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOp
 // ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
-
-///////////////////////////////////////////////////////////////
-app.listen(PORT, () => {
-  console.log(`API listening on PORT ${PORT} `)
+// Define your routes
+app.get('/', (req, res) => {
+  res.send('Hello World!');
 });
-///////////////////////////////////////////////////////////////
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
