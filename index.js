@@ -130,7 +130,7 @@ app.post('/api/bapz/id', async (req, res) => {
     if (product.length === 1) {
       const name = product[0].productname.split(' ').join('')
       const srcs = await getSrc(name)
-      res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0])})
+      res.send({'found':"yes",'src': srcs , 'data':araJSON(product[0]) })
     }
 
   }
@@ -141,7 +141,10 @@ app.post('/api/bapz/id', async (req, res) => {
   res.send({'data': '0'})
 });
 /////////////////////////////////////////////////////////////////
-////--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+/////////////////////////////////////////////////////////////////
 app.post('/api/bapz/apparel', async (req, res) => {
 
   // get elements from database
@@ -155,8 +158,62 @@ app.post('/api/bapz/apparel', async (req, res) => {
       prodsRes = []
       for (const produit of products) {
 
-        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString())])
+        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0])])
       }
+
+      res.status(200).json({ data: prodsRes });
+      return
+    }
+    else {
+      const tShirts = await prisma.bapz.findMany({
+        where: {
+          category: 't-shirts',
+        },
+        take: 2,
+      });
+      
+      const shoes = await prisma.bapz.findMany({
+        where: {
+          category: 'shoes',
+        },
+        take: 2,
+      });
+      
+      const pants = await prisma.bapz.findMany({
+        where: {
+          category: 'pants',
+        },
+        take: 2,
+      });
+      
+      const watches = await prisma.bapz.findMany({
+        where: {
+          category: 'watches',
+        },
+        take: 2,
+      });
+      
+      const bags = await prisma.bapz.findMany({
+        where: {
+          category: 'bags',
+        },
+        take: 2,
+      });
+      
+      const sweats = await prisma.bapz.findMany({
+        where: {
+          category: 'sweats',
+        },
+        take: 2,
+      });
+      
+      const products = [...tShirts, ...shoes, ...pants, ...watches, ...bags, ...sweats];
+      
+      prodsRes = []
+      for (const produit of products) {
+        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString()), produit.price ])
+      }
+      console.log(products.length)
 
       res.status(200).json({ data: prodsRes });
       return
@@ -167,10 +224,13 @@ app.post('/api/bapz/apparel', async (req, res) => {
   catch {
     console.log('Error catched by try.')
   }
-  res.send({"data":"0"})
+  res.status(400).json({ data: "no" });
   return
 
 })
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////--------------------------------------------------------------------------------------------------------------------------------
 
 ////     SWAGGER       ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const swaggerDocument = require('./swagger.json');

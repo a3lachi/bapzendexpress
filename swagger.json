@@ -80,7 +80,7 @@
             "Bapz"
           ],
           "summary": "Retrieve all images by category",
-          "description": "Get mapping of all images data by category.",
+          "description": "Get mapping of all images data by category.If cat is not specified it will return 2 products of each categry",
           "parameters": [
             {
               "name": "cat",

@@ -6,7 +6,7 @@ url = [ 'https://bapzendexpress.vercel.app/api/bapz/id' , "http://localhost:3000
 
 
 
-res = requests.post(url[1],{"cat":"hats"})
+res = requests.post(url[1])
 
 
 
