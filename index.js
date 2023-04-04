@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
-const PORT =  4000;
+const PORT =  3000;
 
 const prisma = new PrismaClient();
 
