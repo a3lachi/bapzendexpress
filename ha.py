@@ -3,7 +3,7 @@ import json
 import sys
 
 
-url = [ 'https://bapzendexpress.vercel.app/api/bapz/id' , "http://localhost:8000/api/bapz/apparel" ]
+url = [ "http://localhost:8000/api/customer/token", "http://localhost:4000/api/customer/token" ]
 data_user = { 'email':'mm7@hotmail.fr',
        'pwd':'pwd',
               'mm': 'mli7',
@@ -14,11 +14,11 @@ data_user = { 'email':'mm7@hotmail.fr',
         }
 
 data = {
-    'cat':'hats'
+    'jwt':'45465TUYJTHRGFS76756'
 }
 data_bytes = json.dumps(data).encode('utf-8')
 
-res = requests.post(url[1],data)
+res = requests.post(url[int(sys.argv[1])],data)
 
 
 

@@ -87,10 +87,13 @@ for (const dt of getData) {
 
 //////////////
 const getSrc = (name) => {
+  // console.log('GET SRC OF :',name)
+  const nameWithNoSpace = name.split(' ').join('')
   rez = []
   for (const data of dataTree[name[0]]) {
+    
     const dataRay = data.split('__')
-    if (name === dataRay[0].slice(0,-1)) {
+    if (nameWithNoSpace === dataRay[0].slice(0,-1)) {
       rez.push(dataRay[1])
     }
   }
@@ -167,6 +170,7 @@ app.post('/api/bapz/id', async (req, res) => {
   // get elements from database
   try {
     if(req?.body?.id) {
+      console.log('ID OF ELEMENT TO RETURN ',req.body.id)
       const product = await prisma.bapz.findMany({
         where: {
           id: BigInt(req.body.id),
@@ -388,7 +392,7 @@ app.post('/api/customer', async (req, res) => {
 
 
 ////   POST     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-app.post('api/customer/commands', async (req, res) => {
+app.post('/api/customer/commands', async (req, res) => {
   
   // get elements from database
   try {
@@ -422,24 +426,84 @@ app.post('api/customer/commands', async (req, res) => {
 
 ////   POST     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GET USERS COMMANDS BY JWT
-app.post('api/customer/token', async (req, res) => {
+app.post('/api/customer/token', async (req, res) => {
   
   // get elements from database
   try {
     if(req?.body?.jwt) {
-      const customer = prisma.customer.findMany({
-        where:{
-          jwt : req.body.jwt
-        }
+      console.log('bbb',req.body.jwt)
+      const customer = await prisma.customer.findMany({
+        where: {
+          jwt: req.body.jwt.toString(),
+        },
       })
+      // const allJwt = []
+      // for (const cus of customer){
+      //   allJwt.push(cus.jwt)
+      // }
+      // res.status(200).json({jwt:allJwt})
+      // return 
 
       if (customer?.length === 1) {
-        const email = customer[0].email
-        res.status(200).json({data:email})
+        const commands = customer[0].commands
+
+        // const dates = commands.split('//').map(elem=>(elem.split('|')[1]))
+
+        // const adresses =  commands.split('//').map(elem=>(elem.split('|')[2]))
+
+        // const ids = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[3] || "" )))
+        // const sizes = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[1] || "" )))
+
+        let dates = [] , adresses = [] , ids = [] , sizes = [] , section = [] , id = [] , itemArray = [] ;
+
+        let rezult = []
+        for (const command of commands.split('//')) {
+          section = command.split('|')
+          if (section[1]) {
+            rezult.push(section[1])  // Dates 
+            
+
+            id = []
+            for (const item of section[0].split('@')) {
+              itemArray = item.split(',')
+              if (itemArray[3]) { // ID
+                Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
+                id.push([Product.productname,getSrc(Product.productname).slice(0,1), Product.price , itemArray[3] , itemArray[2]])
+              }
+            }
+            rezult.push(id)
+
+            rezult.push(section[2]) // Addresse
+
+          }
+        }
+
+
+
+        // var allRez = []
+        // var commandRez = []
+        // var name = "" , price = "" ;
+        // for (const idArray of ids) {
+        //   commandRez = []
+
+        //   for (const id of idArray) {
+        //     if (id.length>0) {
+        //       Product = await prisma.bapz.findFirst({ where: {id:Number(id)} })
+        //       name = Product.productname
+        //       price = Product.price
+        //       commandRez.push([name,getSrc(name).slice(0,1),price])
+        //     }
+        //   }
+        //   allRez.push(commandRez)
+        // }
+        res.status(200).json({
+          data:rezult,
+          // 'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
+        })
         return 
       }
       else 
-        res.status(200).json({data:'jwtnotfound'})
+        res.status(200).json({ data:'jwtnotfound'})
         return 
     }
   } catch {
@@ -450,10 +514,6 @@ app.post('api/customer/token', async (req, res) => {
   return
 });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
 
 
 
