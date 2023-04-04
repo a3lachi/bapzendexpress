@@ -19,9 +19,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.static('public'));
 
 
 const PORT =  4000;
@@ -33,12 +32,8 @@ const prisma = new PrismaClient();
 
 
 // ///////////////////////////////////////////////////////////////
-const imagePath = './images/';
-
-
 const fileData = path.join(process.cwd(), './', 'data.txt');
 const getData = fs.readFileSync(fileData, 'utf8').split('\n');
-
 
 const dataTree = {
   'A': [],
