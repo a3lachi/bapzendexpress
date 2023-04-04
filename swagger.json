@@ -60,7 +60,7 @@
           "description": "Check if the user exist in database",
           "parameters": [
             {
-              "name": "email",
+              "name": "data",
               "in": "body",
               "description": "User Email",
               "required": ["email","pwd"],
@@ -79,6 +79,53 @@
                   "frstname": {
                     "type": "string",
                     "default":"Frstname"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Image uploaded successfully"
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      },
+      "/api/customer/commands": {
+        "post": {
+          "tags": [
+            "Customer"
+          ],
+          "summary": "Update a customer commands.",
+          "description": "After a payment success",
+          "parameters": [
+            {
+              "name": "data",
+              "in": "body",
+              "description": "User Email",
+              "required": ["email","pwd"],
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jwt": {
+                    "type": "string",
+                    "default":"SFDGR35AESDFJHHFGHDF"
+                  },
+                  "cmds": {
+                    "type": "string",
+                    "default":"//Army Green,S,1,895@Navy Blue,S,1,1045@Brown,S,1,1070@Army Green,S,1,742@|26/3/2023|11 rue de médecis, clermont ferrand 63000//Grey,M,2,805@Black,S,1,769@Black,S,1,1029@|26/3/2023|11 rue de médecis, clermont ferrand 63000//Light Blue,S,1,752@Caise,S,1,756@|26/3/2023|11 rue de médecis, clermont ferrand 63000"
+                  },
+                  "date": {
+                    "type": "string",
+                    "default":"26/3/2023"
+                  },
+                  "adrs": {
+                    "type": "string",
+                    "default":"11 rue de médecis, clermont ferrand 63000"
                   }
                 }
               }

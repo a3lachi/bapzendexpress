@@ -21,7 +21,7 @@ app.use(express.static('public'));
 
 
 
-const PORT = process.env.PORT || 3000;
+const PORT =  4000;
 
 const prisma = new PrismaClient();
 
@@ -381,11 +381,76 @@ app.post('/api/customer', async (req, res) => {
   res.status(400).json({ data: 0 });
   return
 });
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+////   POST     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+app.post('api/customer/commands', async (req, res) => {
+  
+  // get elements from database
+  try {
+    if(req?.body?.jwt) {
+      
+      // deal with element
+
+        const comond = product[0].commands + '//' + req.body.cmds.toString() + req.body.date.toString() + '|' + req.body.adrs.toString()
+        const customer = await prisma.customer.update({
+          where: {
+            jwt: req.body.jwt.toString(),
+          },
+          data: {
+            commands: comond
+          },
+        });
+        
+        res.status(200).json({info:'mrboha'});
+        return 
+    }
+  } catch {
+      console.log('try cathced an error.')
+  }
+
+  res.status(400).json({ data: 0 });
+  return
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+////   POST     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// GET USERS COMMANDS BY JWT
+app.post('api/customer/token', async (req, res) => {
+  
+  // get elements from database
+  try {
+    if(req?.body?.jwt) {
+      const customer = prisma.customer.findMany({
+        where:{
+          jwt : req.body.jwt
+        }
+      })
+
+      if (customer?.length === 1) {
+        const email = customer[0].email
+        res.status(200).json({data:email})
+        return 
+      }
+      else 
+        res.status(200).json({data:'jwtnotfound'})
+        return 
+    }
+  } catch {
+      console.log('try cathced an error.')
+  }
+
+  res.status(400).json({ data: 0 });
+  return
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
