@@ -36,6 +36,7 @@ const imagePath = './images/';
 const fileData = path.join(process.cwd(), './', 'data.txt');
 const getData = fs.readFileSync(fileData, 'utf8').split('\n');
 
+
 const dataTree = {
   'A': [],
   'B': [],
@@ -86,17 +87,30 @@ for (const dt of getData) {
 
 
 //////////////
-const getSrc = (name) => {
+const getSrc = (name,indice) => {
   // console.log('GET SRC OF :',name)
   const nameWithNoSpace = name.split(' ').join('')
   rez = []
-  for (const data of dataTree[name[0]]) {
-    
-    const dataRay = data.split('__')
-    if (nameWithNoSpace === dataRay[0].slice(0,-1)) {
-      rez.push(dataRay[1])
+  if (indice === 1) { // RETURN JUST 1 ELMENT FOR COMMANDS
+    for (const data of dataTree[name[0]]) {
+      const dataRay = data.split('__')
+      if (`${nameWithNoSpace}0` === dataRay[0]) {
+        rez.push(dataRay[1])
+        break
+      }
     }
   }
+  else {
+    for (const data of dataTree[name[0]]) {
+      const dataRay = data.split('__')
+      if (`${nameWithNoSpace}` === dataRay[0].slice(0,-1)) {
+        rez.push(dataRay[1])
+      }
+    }
+
+  }
+  console.log(rez);
+
   return rez
 }
 //////////////
@@ -178,7 +192,7 @@ app.post('/api/bapz/id', async (req, res) => {
       });
       // deal with element
       if (product.length === 1) {
-        const rez = getSrc(product[0].productname.split(' ').join(''))
+        const rez = getSrc(product[0].productname.split(' ').join(''),0)
         res.status(200).json({found:"yes" ,src:rez,data:araJSON(product[0])});
         return 
       }
@@ -207,7 +221,7 @@ app.post('/api/bapz/product', async (req, res) => {
       // deal with element
       if (product.length === 1) {
         const name = product[0].productname.split(' ').join('')
-        const srcs = await getSrc(name)
+        const srcs = await getSrc(name,0)
         res.status(200).json({found:"yes" ,src:srcs , data:araJSON(product[0]) });
         return 
       }
@@ -237,7 +251,7 @@ app.post('/api/bapz/apparel', async (req, res) => {
       prodsRes = []
       for (const produit of products) {
 
-        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0])])
+        prodsRes.push([produit.productname,await getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0])])
       }
 
       res.status(200).json({ data: prodsRes });
@@ -290,7 +304,7 @@ app.post('/api/bapz/apparel', async (req, res) => {
       
       prodsRes = []
       for (const produit of products) {
-        prodsRes.push([produit.productname,getSrc(produit.productname).slice(0,2),Number(produit.id.toString()), produit.price ])
+        prodsRes.push([produit.productname,getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), produit.price ])
       }
       console.log(products.length)
 
@@ -430,6 +444,7 @@ app.post('/api/customer/token', async (req, res) => {
   
   // get elements from database
   try {
+    console.log('STARTED TRYING')
     if(req?.body?.jwt) {
       console.log('bbb',req.body.jwt)
       const customer = await prisma.customer.findMany({
@@ -454,13 +469,14 @@ app.post('/api/customer/token', async (req, res) => {
         // const ids = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[3] || "" )))
         // const sizes = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[1] || "" )))
 
-        let dates = [] , adresses = [] , ids = [] , sizes = [] , section = [] , id = [] , itemArray = [] ;
+        let  section = [] , id = [] , itemArray = [] ;
 
+        let Commandrezult = []
         let rezult = []
         for (const command of commands.split('//')) {
           section = command.split('|')
           if (section[1]) {
-            rezult.push(section[1])  // Dates 
+            Commandrezult = [section[1]]  // Dates 
             
 
             id = []
@@ -468,12 +484,13 @@ app.post('/api/customer/token', async (req, res) => {
               itemArray = item.split(',')
               if (itemArray[3]) { // ID
                 Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
-                id.push([Product.productname,getSrc(Product.productname).slice(0,1), Product.price , itemArray[3] , itemArray[2]])
+                id.push([Product.productname,getSrc(Product.productname,1).slice(0,1), Product.price ,itemArray[1] ,itemArray[2]])
               }
             }
-            rezult.push(id)
+            Commandrezult.push(id)
 
-            rezult.push(section[2]) // Addresse
+            Commandrezult.push(section[2]) // Addresse
+            rezult.push(Commandrezult)
 
           }
         }
