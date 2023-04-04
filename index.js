@@ -88,7 +88,6 @@ for (const dt of getData) {
 
 //////////////
 const getSrc = (name,indice) => {
-  // console.log('GET SRC OF :',name)
   const nameWithNoSpace = name.split(' ').join('')
   rez = []
   if (indice === 1) { // RETURN JUST 1 ELMENT FOR COMMANDS
@@ -109,8 +108,6 @@ const getSrc = (name,indice) => {
     }
 
   }
-  console.log(rez);
-
   return rez
 }
 //////////////
@@ -118,7 +115,6 @@ const getSrc = (name,indice) => {
 
 ////////////////
 const araJSON = (bigint) => {
-  console.log('))))))',bigint)
   return(
     {
       'id':Number(bigint.id.toString()),
@@ -180,11 +176,9 @@ app.post('/ids', async (req, res) => {
 
 ////   POST     /////////////////////////////////////////////////
 app.post('/api/bapz/id', async (req, res) => {
-  console.log(req.body.id)
   // get elements from database
   try {
     if(req?.body?.id) {
-      console.log('ID OF ELEMENT TO RETURN ',req.body.id)
       const product = await prisma.bapz.findMany({
         where: {
           id: BigInt(req.body.id),
@@ -239,7 +233,6 @@ app.post('/api/bapz/product', async (req, res) => {
 
 ///////   POST     //////////////////////////////////////////////////////////
 app.post('/api/bapz/apparel', async (req, res) => {
-  console.log(req.body.cat)
   // get elements from database
   try {
     if(req?.body?.cat) {
@@ -306,7 +299,6 @@ app.post('/api/bapz/apparel', async (req, res) => {
       for (const produit of products) {
         prodsRes.push([produit.productname,getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), produit.price ])
       }
-      console.log(products.length)
 
       res.status(200).json({ data: prodsRes });
       return
@@ -338,12 +330,10 @@ app.post('/api/bapz/apparel', async (req, res) => {
 //////    POST    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post('/api/customer', async (req, res) => {
   
-  // get elements from database
-  console.log(req.body.email)
-  
+  // get elements from database  
   try {
     if(req?.body?.email && req?.body?.pwd) {
-      if (!req.body.frstname) {
+      if (!req.body.firstname) {
         //////////////// login //////////////
         const customer = await prisma.customer.findMany({
           where: {
@@ -351,7 +341,6 @@ app.post('/api/customer', async (req, res) => {
             pwd : req.body.pwd.toString()
           }
         });
-        console.log(customer.length)
         // deal with element
         if (customer.length === 1) {
           res.status(200).json({info:"user" , "jwt":customer[0].jwt});
@@ -366,6 +355,7 @@ app.post('/api/customer', async (req, res) => {
       else {
         //////////////// REGISTER //////////////
          // check if email is already registred
+         console.log('--------MRBOOOOOOOOOOOOOOOOHA')
          const customerCheck = await prisma.customer.findMany({
           where: {
             email: req.body.email.toString()
@@ -377,14 +367,15 @@ app.post('/api/customer', async (req, res) => {
         }
 
         // NEW USER
-        const jwt = 'DSFDGSDFHR78568756756' 
+        const jwt = 'DnbnbnbnbnbvbnRdfgh78568756756' 
+        console.log('--------',jwt)
         const user = await prisma.customer.create({
           data: {
             email:req.body.email.toString(),
             pwd:req.body.pwd.toString(),
-            frstname: req.body.frstname.toString(),
-            lstname: req.body.lstname.toString(),
-            usrname:req.body.usrname.toString(),
+            frstname: req.body.firstname.toString(),
+            lstname: req.body.lastname.toString(),
+            usrname:req.body.username.toString(),
             jwt:jwt
           },
         })
@@ -394,6 +385,8 @@ app.post('/api/customer', async (req, res) => {
     }
   } catch (err)  {
       console.log('try cathced an error.',err)
+      res.status(400).json({ data: err });
+      return
   }
 
   res.status(400).json({ data: 0 });
@@ -411,24 +404,29 @@ app.post('/api/customer/commands', async (req, res) => {
   // get elements from database
   try {
     if(req?.body?.jwt) {
-      
+      const customer = await prisma.customer.findFirst({
+        where: {
+          jwt: req.body.jwt.toString(),
+        },
+      })
       // deal with element
-
-        const comond = product[0].commands + '//' + req.body.cmds.toString() + req.body.date.toString() + '|' + req.body.adrs.toString()
-        const customer = await prisma.customer.update({
-          where: {
-            jwt: req.body.jwt.toString(),
-          },
-          data: {
-            commands: comond
-          },
-        });
-        
-        res.status(200).json({info:'mrboha'});
-        return 
+      
+      const comond = customer.commands + '//' + req.body.cmds.toString() + '|' + req.body.date.toString() + '|' + req.body.adrs.toString()
+      console.log(comond)
+      const updateCommand = await prisma.customer.update({
+        where: {
+          id: customer.id,
+        },
+        data: {
+          commands: comond
+        },
+      });
+      
+      res.status(200).json({info:'mrboha'});
+      return 
     }
-  } catch {
-      console.log('try cathced an error.')
+  } catch (error) {
+      console.log('try cathced an error.',error)
   }
 
   res.status(400).json({ data: 0 });
@@ -452,72 +450,56 @@ app.post('/api/customer/token', async (req, res) => {
           jwt: req.body.jwt.toString(),
         },
       })
-      // const allJwt = []
-      // for (const cus of customer){
-      //   allJwt.push(cus.jwt)
-      // }
-      // res.status(200).json({jwt:allJwt})
-      // return 
 
       if (customer?.length === 1) {
+        
         const commands = customer[0].commands
+        console.log('HA LCOMMANDS',commands)
+        
+        if (commands?.length>5) {
+          console.log('COMMANDS LENGTH KBIR')
+          
+          let  section = [] , id = [] , itemArray = [] ;
 
-        // const dates = commands.split('//').map(elem=>(elem.split('|')[1]))
+          let Commandrezult = []
+          let rezult = []
 
-        // const adresses =  commands.split('//').map(elem=>(elem.split('|')[2]))
 
-        // const ids = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[3] || "" )))
-        // const sizes = commands.split('//').map(elem=>(elem.split('|')[0])).filter(elem=>elem!="").map(elem=>(elem.split('@').map(elem => elem.split(',')[1] || "" )))
+          for (const command of commands.split('//')) {
+            section = command.split('|')
+            if (section[1]) {
+              Commandrezult = [section[1]]  // Dates 
+              
 
-        let  section = [] , id = [] , itemArray = [] ;
-
-        let Commandrezult = []
-        let rezult = []
-        for (const command of commands.split('//')) {
-          section = command.split('|')
-          if (section[1]) {
-            Commandrezult = [section[1]]  // Dates 
-            
-
-            id = []
-            for (const item of section[0].split('@')) {
-              itemArray = item.split(',')
-              if (itemArray[3]) { // ID
-                Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
-                id.push([Product.productname,getSrc(Product.productname,1).slice(0,1), Product.price ,itemArray[1] ,itemArray[2]])
+              id = []
+              for (const item of section[0].split('@')) {
+                itemArray = item.split(',')
+                if (itemArray[3]) { // ID
+                  Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
+                  id.push([Product.productname,getSrc(Product.productname,1).slice(0,1), Product.price ,itemArray[1] ,itemArray[2]])
+                }
               }
+              Commandrezult.push(id)
+
+              Commandrezult.push(section[2]) // Addresse
+              rezult.push(Commandrezult)
+
             }
-            Commandrezult.push(id)
-
-            Commandrezult.push(section[2]) // Addresse
-            rezult.push(Commandrezult)
-
           }
+
+          res.status(200).json({
+            data:rezult,
+            'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
+          })
+          return 
         }
-
-
-
-        // var allRez = []
-        // var commandRez = []
-        // var name = "" , price = "" ;
-        // for (const idArray of ids) {
-        //   commandRez = []
-
-        //   for (const id of idArray) {
-        //     if (id.length>0) {
-        //       Product = await prisma.bapz.findFirst({ where: {id:Number(id)} })
-        //       name = Product.productname
-        //       price = Product.price
-        //       commandRez.push([name,getSrc(name).slice(0,1),price])
-        //     }
-        //   }
-        //   allRez.push(commandRez)
-        // }
-        res.status(200).json({
-          data:rezult,
-          // 'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
-        })
-        return 
+        else {
+          res.status(200).json({
+            'data':[],
+            'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
+          })
+          return 
+        }
       }
       else 
         res.status(200).json({ data:'jwtnotfound'})
