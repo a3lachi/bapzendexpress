@@ -7,6 +7,8 @@ const { PrismaClient } = require('@prisma/client');
 const { readdir } = require('fs').promises;
 const path = require ('path')
 const swaggerUi = require('swagger-ui-express');
+const jwt = require('jsonwebtoken');
+
 
 
 
@@ -358,28 +360,32 @@ app.post('/api/customer', async (req, res) => {
          console.log('--------MRBOOOOOOOOOOOOOOOOHA')
          const customerCheck = await prisma.customer.findMany({
           where: {
-            email: req.body.email.toString()
+            email: req.body.email
           }
         });
+        console.log('WACH LQA HAD ZBI',customerCheck.length)
         if (customerCheck.length === 1) {
           res.status(200).json({info:"exist"});
           return
         }
 
         // NEW USER
-        const jwt = 'DnbnbnbnbnbvbnRdfgh78568756756' 
-        console.log('--------',jwt)
+        const currentDate = new Date();
+        console.log('-------REQ',req.body)
+
+        const jwtt = jwt.sign( req.body.email + currentDate.toString(),secretOrPrivateKey='kjhgfdghjkl');
+        console.log('--------',jwtt)
         const user = await prisma.customer.create({
           data: {
-            email:req.body.email.toString(),
-            pwd:req.body.pwd.toString(),
-            frstname: req.body.firstname.toString(),
-            lstname: req.body.lastname.toString(),
-            usrname:req.body.username.toString(),
-            jwt:jwt
+            email:req.body.email,
+            pwd:req.body.pwd,
+            frstname: req.body.firstname,
+            lstname: req.body.lastname,
+            usrname:req.body.username,
+            jwt:jwtt
           },
         })
-        res.status(200).json({info:"new" , "jwt":jwt});
+        res.status(200).json({info:"new" , "jwt":jwtt});
         return 
       }
     }
