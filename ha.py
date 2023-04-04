@@ -3,13 +3,13 @@ import json
 import sys
 
 
-url = [ "http://localhost:8000/api/customer", "http://localhost:4000/api/customer" ]
-data_user = { 'email':'kjjhgfjhghjnk7@hotmail.fr',
-       'pwd':'pkjwd',
-              'firstname': 'mlkli7',
-              'lastname': 'boko',
-              'username':'fara',
-              'jwt':'DSFDGSDFHR78568756756' 
+url = [ "http://localhost:8000/api/customer", "http://localhost:4000/api/customer" , "https://bapzendexpress.vercel.app/api/customer" ]
+data_user = { 'email':'aa@a',
+       'pwd':'a',
+            #   'firstname': 'mlkli7',
+            #   'lastname': 'boko',
+            #   'username':'fara',
+            #   'jwt':'DSFDGSDFHR78568756756' 
         
         }
 

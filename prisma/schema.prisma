@@ -101,6 +101,7 @@ model customer {
   usrname  String?
 }
 
+
 model django_admin_log {
   id                  BigInt               @id(map: "idx_16580_django_admin_log_pkey") @default(autoincrement())
   object_id           String?
