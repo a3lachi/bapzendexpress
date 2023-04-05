@@ -100,9 +100,6 @@ for (const dt of files) {
   }
 }
 
-console.log('listOfImagesSrc : ')
-
-
 
 
 
