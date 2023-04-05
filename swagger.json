@@ -1,9 +1,9 @@
 {
     "swagger": "2.0",
     "info": {
-      "title": "Bapz Store Backend",
+      "title": "Bapz Backend API",
       "version": "1.0.0",
-      "description": "Bapz Store Backend Swagger"
+      "description": "Bapz Store Backend Swagger. This backend is written in Express JS."
     },
     "basePath": "/",
     "schemes": [
@@ -28,41 +28,6 @@
             },
             "400": {
               "description": "Server down"
-            }
-          }
-        }
-      },
-      "/api/bapz/id": {
-        "post": {
-          "tags": [
-            "Bapz"
-          ],
-          "summary": "Retrieve a product by ID",
-          "description": "retrieve product full details by ID",
-          "parameters": [
-            {
-              "name": "id",
-              "in": "body",
-              "description": "The ID of the image",
-              "required": true,
-              "type": "object",
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "integer",
-                    "default":736
-                  }
-                }
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "Image uploaded successfully"
-            },
-            "400": {
-              "description": "Invalid request data"
             }
           }
         }

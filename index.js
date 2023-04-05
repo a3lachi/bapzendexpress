@@ -22,7 +22,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 
-const publicPath = path.join(__dirname, 'public');
+// const publicPath = path.join(__dirname, 'publicapp.use('/images', express.static(imagesPath));
+// ');
 
 
 // app.use(express.static(publicPath));
@@ -31,8 +32,10 @@ const publicPath = path.join(__dirname, 'public');
 
 
 
-// Set the path to your favicon
-const faviconPath = path.join(__dirname, 'BAPE-Logo.png');
+// 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static('public/images'));
+faviconPath = path.join(__dirname, 'BAPE-Logo.png');
 
 // Serve the favicon using the serve-favicon middleware
 app.use(favicon(faviconPath));
@@ -179,7 +182,7 @@ const araJSON = (bigint) => {
 
 ////    GET     ///////////////////////////////////////////////////
 app.get('/images', (req, res) => {
-  res.send({'data':files})
+  res.send({'data':dataTree})
 });
 // ///////////////////////////////////////////////////////////////
 
@@ -369,8 +372,10 @@ app.post('/api/customer', async (req, res) => {
             pwd : req.body.pwd.toString()
           }
         });
+        console.log('zbi',req.body)
         // deal with element
         if (customer.length === 1) {
+          
           res.status(200).json({info:"user" , "jwt":customer[0].jwt});
           return 
         }
@@ -583,7 +588,8 @@ const addedCss = `
 `;
 const finalcss = addedCss + customCss
 var swaggerOptions = {
-  customCss: finalcss
+  customCss: finalcss,
+  protocol: 'https'
 };
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
