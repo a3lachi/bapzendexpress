@@ -16,6 +16,22 @@
       "application/json"
     ],
     "paths": {
+      "/": {
+        "get": {
+          "tags": [
+            "Bapz"
+          ],
+          "summary": "API Swagger",
+          "responses": {
+            "200": {
+              "description": "Swagger of the API"
+            },
+            "400": {
+              "description": "Server down"
+            }
+          }
+        }
+      },
       "/api/bapz/id": {
         "post": {
           "tags": [
@@ -228,6 +244,41 @@
           }
         }
       },
+      "/api/customer/token": {
+        "post": {
+          "tags": [
+            "Customer"
+          ],
+          "summary": "Get users commands",
+          "description": "Get users commands",
+          "parameters": [
+            {
+              "name": "jwt",
+              "in": "body",
+              "description": "JASON Web Token",
+              "required": true,
+              "type": "object",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "jwt": {
+                    "type": "string",
+                    "default":"eyJhbGciOiJIUzI1NiJ9.YmlnZnJlZXplQGhvdG1haWwuZnJXZWQgQXByIDA1IDIwMjMgMDc6NTg6NDYgR01UKzAwMDAgKENvb3JkaW5hdGVkIFVuaXZlcnNhbCBUaW1lKQ.qaF_musGQgutStrQ-Eryk7Loc82jgkCAqDxxp3zZY34"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Data ready."
+            },
+            "400": {
+              "description": "Invalid request data"
+            }
+          }
+        }
+      },
       "/ids": {
         "post": {
           "tags": [
@@ -256,22 +307,6 @@
           "responses": {
             "200": {
               "description": "IDs ready."
-            },
-            "400": {
-              "description": "Invalid request data"
-            }
-          }
-        }
-      },
-      "/": {
-        "get": {
-          "tags": [
-            "Bapz"
-          ],
-          "summary": "Test API is up",
-          "responses": {
-            "200": {
-              "description": "API is up"
             },
             "400": {
               "description": "Invalid request data"

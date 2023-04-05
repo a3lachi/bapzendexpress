@@ -8,6 +8,8 @@ const { readdir } = require('fs').promises;
 const path = require ('path')
 const swaggerUi = require('swagger-ui-express');
 const jwt = require('jsonwebtoken');
+const favicon = require('serve-favicon');
+
 
 
 
@@ -26,11 +28,14 @@ const publicPath = path.join(__dirname, 'public');
 app.use(express.static(publicPath));
 
 
-const imagesPath = path.join(publicPath, 'images');
-app.use('/images', express.static(imagesPath));
 
 
 
+// Set the path to your favicon
+const faviconPath = path.join(__dirname, 'public', 'BAPE-Logo.png');
+
+// Serve the favicon using the serve-favicon middleware
+app.use(favicon(faviconPath));
 
 
 const PORT =  3000;
@@ -40,10 +45,10 @@ const prisma = new PrismaClient();
 //--------------------------------------------------------------------------------------------------------------------------------
 
 // GET LIST OF ALL IMAGES STORED IN PUBLIC/IMAGES
-const dirPath = path.join(process.cwd(), './public', 'images');
+
 var listOfImagesSrc = []
 
-const files = fs.readdirSync(dirPath)
+const files = fs.readdirSync(publicPath)
 // files.forEach((file) => {
 //   listOfImagesSrc.push(file);
 // });
@@ -169,20 +174,15 @@ const araJSON = (bigint) => {
 ////--------------------------------------------------------------------------------------------------------------------------------
 
 
-////    GET     ///////////////////////////////////////////////////
-app.get('/', (req, res) => {
-  res.send({'info':"API CORRECTLY WORKING."})
-});
-///////////////////////////////////////////////////////////////
+// ////    GET     ///////////////////////////////////////////////////
+// app.get('/', (req, res) => {
+//   res.send({'info':"API CORRECTLY WORKING."})
+// });
+// ///////////////////////////////////////////////////////////////
 
 ////    GET     ///////////////////////////////////////////////////
 app.get('/images', (req, res) => {
-
-  const file = path.join(process.cwd(), './', 'data.txt');
-  const stringified = fs.readFileSync(file, 'utf8');
-
-
-  res.send({'data':stringified})
+  res.send({'data':files})
 });
 // ///////////////////////////////////////////////////////////////
 
@@ -588,7 +588,7 @@ const finalcss = addedCss + customCss
 var swaggerOptions = {
   customCss: finalcss
 };
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerOptions));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
