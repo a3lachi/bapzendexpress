@@ -32,7 +32,7 @@ const publicPath = path.join(__dirname, 'public');
 
 
 // Set the path to your favicon
-const faviconPath = path.join(__dirname, 'public', 'BAPE-Logo.png');
+const faviconPath = path.join(__dirname, 'BAPE-Logo.png');
 
 // Serve the favicon using the serve-favicon middleware
 app.use(favicon(faviconPath));
