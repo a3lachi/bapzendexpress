@@ -20,6 +20,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/images', express.static('public/images'));
+
 
 
 
@@ -29,8 +31,14 @@ const prisma = new PrismaClient();
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
+// GET LIST OF ALL IMAGES STORED IN PUBLIC/IMAGES
+const dirPath = path.join(process.cwd(), './public', 'images');
+var listOfImagesSrc = []
 
-
+const files = fs.readdirSync(dirPath)
+// files.forEach((file) => {
+//   listOfImagesSrc.push(file);
+// });
 // ///////////////////////////////////////////////////////////////
 const fileData = path.join(process.cwd(), './', 'data.txt');
 const getData = fs.readFileSync(fileData, 'utf8').split('\n');
@@ -72,13 +80,14 @@ const dataTree = {
   '8': [],
   '9': []
 };
-for (const dt of getData) {
+for (const dt of files) {
   const char = dt[0]
   if (dataTree.hasOwnProperty(char)) {
     dataTree[char].push(dt);
   }
 }
 
+console.log('listOfImagesSrc : ')
 
 
 
@@ -109,7 +118,23 @@ const getSrc = (name,indice) => {
   return rez
 }
 //////////////
+const getSrcFromLocal = (name,indice) => {
+  const nameWithNoSpace = name.split(' ').join('')
+  rez = []
+  if (indice === 1) { // RETURN JUST 1 ELMENT FOR COMMANDS
+    rez = [`/images/${nameWithNoSpace}O.jpg`]
+  }
+  else {
+    for (const data of dataTree[name[0]]) {
+      const dataRay = data.split('__')
+      if (`${nameWithNoSpace}` === dataRay[0].slice(0,-1)) {
+        rez.push(dataRay[1])
+      }
+    }
 
+  }
+  return rez
+}
 
 ////////////////
 const araJSON = (bigint) => {
