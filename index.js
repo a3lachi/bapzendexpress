@@ -353,13 +353,11 @@ app.post('/api/customer', async (req, res) => {
       else {
         //////////////// REGISTER //////////////
          // check if email is already registred
-         console.log('--------MRBOOOOOOOOOOOOOOOOHA')
          const customerCheck = await prisma.customer.findMany({
           where: {
             email: req.body.email
           }
         });
-        console.log('WACH LQA HAD ZBI',customerCheck.length)
         if (customerCheck.length === 1) {
           res.status(200).json({info:"exist"});
           return
@@ -367,10 +365,8 @@ app.post('/api/customer', async (req, res) => {
 
         // NEW USER
         const currentDate = new Date();
-        console.log('-------REQ',req.body)
 
         const jwtt = jwt.sign( req.body.email + currentDate.toString(),secretOrPrivateKey='kjhgfdghjkl');
-        console.log('--------',jwtt)
         const user = await prisma.customer.create({
           data: {
             email:req.body.email,
@@ -414,7 +410,6 @@ app.post('/api/customer/commands', async (req, res) => {
       // deal with element
       
       const comond = customer.commands + '//' + req.body.cmds.toString() + '|' + req.body.date.toString() + '|' + req.body.adrs.toString()
-      console.log(comond)
       const updateCommand = await prisma.customer.update({
         where: {
           id: customer.id,
@@ -444,22 +439,19 @@ app.post('/api/customer/token', async (req, res) => {
   
   // get elements from database
   try {
-    console.log('STARTED TRYING')
     if(req?.body?.jwt) {
-      console.log('bbb',req.body.jwt)
       const customer = await prisma.customer.findMany({
         where: {
           jwt: req.body.jwt.toString(),
         },
       })
+      console.log('FRINZ,,')
 
       if (customer?.length === 1) {
         
         const commands = customer[0].commands
-        console.log('HA LCOMMANDS',commands)
         
-        if (commands?.length>5) {
-          console.log('COMMANDS LENGTH KBIR')
+        if (req.body.info === 'cmds') {
           
           let  section = [] , id = [] , itemArray = [] ;
 
@@ -495,7 +487,8 @@ app.post('/api/customer/token', async (req, res) => {
           })
           return 
         }
-        else {
+        if (req.body.info === 'account') {
+          console.log('FRINZ')
           res.status(200).json({
             'data':[],
             'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
