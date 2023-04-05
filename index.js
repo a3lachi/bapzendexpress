@@ -48,7 +48,7 @@ const prisma = new PrismaClient();
 
 var listOfImagesSrc = []
 
-const files = fs.readdirSync(publicPath)
+// const files = fs.readdirSync(publicPath)
 // files.forEach((file) => {
 //   listOfImagesSrc.push(file);
 // });
@@ -93,7 +93,7 @@ const dataTree = {
   '8': [],
   '9': []
 };
-for (const dt of files) {
+for (const dt of getData) {
   const char = dt[0]
   if (dataTree.hasOwnProperty(char)) {
     dataTree[char].push(dt);
