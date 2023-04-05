@@ -30,8 +30,6 @@ const imagesPath = path.join(publicPath, 'images');
 app.use('/images', express.static(imagesPath));
 
 
-app.use('/images', express.static('public/images'));
-
 
 
 
