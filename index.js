@@ -19,7 +19,17 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
-app.use(express.static(path.join(__dirname, 'public')));
+
+const publicPath = path.join(__dirname, 'public');
+
+
+app.use(express.static(publicPath));
+
+
+const imagesPath = path.join(publicPath, 'images');
+app.use('/images', express.static(imagesPath));
+
+
 app.use('/images', express.static('public/images'));
 
 
