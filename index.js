@@ -22,10 +22,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // Allow all origins to access the API
 
-const publicPath = path.join(__dirname, 'public');
+// const publicPath = path.join(__dirname, 'public');
 
 
-app.use(express.static(publicPath));
+// app.use(express.static(publicPath));
 
 
 
