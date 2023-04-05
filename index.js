@@ -242,7 +242,7 @@ app.post('/api/bapz/apparel', async (req, res) => {
       prodsRes = []
       for (const produit of products) {
 
-        prodsRes.push([produit.productname,await getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0])])
+        prodsRes.push([produit.productname,await getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0]) , produit.color  ] )
       }
 
       res.status(200).json({ data: prodsRes });
@@ -295,7 +295,7 @@ app.post('/api/bapz/apparel', async (req, res) => {
       
       prodsRes = []
       for (const produit of products) {
-        prodsRes.push([produit.productname,getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), produit.price ])
+        prodsRes.push([produit.productname,getSrc(produit.productname,0).slice(0,2),Number(produit.id.toString()), Number(produit.price.split('$')[1].split('.')[0]) , produit.color ])
       }
 
       res.status(200).json({ data: prodsRes });
