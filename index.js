@@ -374,6 +374,7 @@ app.post('/api/customer', async (req, res) => {
             frstname: req.body.firstname,
             lstname: req.body.lastname,
             usrname:req.body.username,
+            commands:"",
             jwt:jwtt
           },
         })
@@ -399,7 +400,8 @@ app.post('/api/customer', async (req, res) => {
 ////   POST     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.post('/api/customer/commands', async (req, res) => {
   
-  // get elements from database
+  // get customer from database
+  console.log('ADD TO DB',req.body)
   try {
     if(req?.body?.jwt) {
       const customer = await prisma.customer.findFirst({
@@ -407,8 +409,8 @@ app.post('/api/customer/commands', async (req, res) => {
           jwt: req.body.jwt.toString(),
         },
       })
-      // deal with element
-      
+
+      // update commands
       const comond = customer.commands + '//' + req.body.cmds.toString() + '|' + req.body.date.toString() + '|' + req.body.adrs.toString()
       const updateCommand = await prisma.customer.update({
         where: {
@@ -418,9 +420,10 @@ app.post('/api/customer/commands', async (req, res) => {
           commands: comond
         },
       });
-      
+      console.log('UPDATED COMMAND')
       res.status(200).json({info:'mrboha'});
       return 
+
     }
   } catch (error) {
       console.log('try cathced an error.',error)
@@ -438,6 +441,7 @@ app.post('/api/customer/commands', async (req, res) => {
 app.post('/api/customer/token', async (req, res) => {
   
   // get elements from database
+
   try {
     if(req?.body?.jwt) {
       const customer = await prisma.customer.findMany({
@@ -445,53 +449,67 @@ app.post('/api/customer/token', async (req, res) => {
           jwt: req.body.jwt.toString(),
         },
       })
-      console.log('FRINZ,,')
 
       if (customer?.length === 1) {
         
         const commands = customer[0].commands
         
         if (req.body.info === 'cmds') {
+          if (commands.length > 0) {
           
-          let  section = [] , id = [] , itemArray = [] ;
+                  let  section = [] , id = [] , itemArray = [] ;
 
-          let Commandrezult = []
-          let rezult = []
+                  let Commandrezult = []
+                  let rezult = []
 
+                  console.log('user commands :',commands)
+                  for (const command of commands.split('//')) {
+                    if (command.length>1) {
+                      console.log('dealing with command :',command)
+                      
+                      section = command.split('|')
+                      if (section[1]) {
+                        Commandrezult = [section[1]]  // Dates 
+                        
 
-          for (const command of commands.split('//')) {
-            section = command.split('|')
-            if (section[1]) {
-              Commandrezult = [section[1]]  // Dates 
-              
+                        id = []
+                        for (const item of section[0].split('@')) {
+                          itemArray = item.split(',')
+                          if (itemArray[3]) { // ID
+                            Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
+                            id.push([Product.productname,getSrc(Product.productname,1).slice(0,1), Product.price ,itemArray[1] ,itemArray[2]])
+                          }
+                        }
+                        Commandrezult.push(id)
 
-              id = []
-              for (const item of section[0].split('@')) {
-                itemArray = item.split(',')
-                if (itemArray[3]) { // ID
-                  Product = await prisma.bapz.findFirst({ where: {id:Number(itemArray[3])} })
-                  id.push([Product.productname,getSrc(Product.productname,1).slice(0,1), Product.price ,itemArray[1] ,itemArray[2]])
+                        Commandrezult.push(section[2]) // Addresse
+                        rezult.push(Commandrezult)
+                        
+
+                      }
+                    }
+
+                  }
+                  console.log('OUI')
+                  res.status(200).json({
+                    data:rezult,
+                    info:'filled'
+
+                  })
+                  return 
                 }
-              }
-              Commandrezult.push(id)
+          else {
+                  res.status(200).json({
+                    data:[],
+                    info:"empty"
+                  })
+                  return 
 
-              Commandrezult.push(section[2]) // Addresse
-              rezult.push(Commandrezult)
-
-            }
           }
-
-          res.status(200).json({
-            data:rezult,
-            'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
-          })
-          return 
         }
         if (req.body.info === 'account') {
-          console.log('FRINZ')
           res.status(200).json({
-            'data':[],
-            'info':[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
+            info:[customer[0].email,customer[0].pwd,customer[0].frstname,customer[0].lstname,customer[0].usrname]
           })
           return 
         }
